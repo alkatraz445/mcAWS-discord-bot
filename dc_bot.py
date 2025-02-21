@@ -62,7 +62,7 @@ async def status(ctx):
         elif status.players.online == 1:
             await ctx.send(f"Aktualnie gra {status.players.online} osoba. Ping to {status.latency:.1f} ms")
         elif status.players.online == 0:
-            await ctx.send("Nikt nie gra. Ping to {status.latency:.1f} ms")
+            await ctx.send(f"Nikt nie gra. Ping to {status.latency:.1f} ms")
         else:
             await ctx.send(f"Aktualnie grają {status.players.online} osoby. Ping to {status.latency:.1f} ms")
         return
