@@ -133,13 +133,16 @@ async def start(ctx):
 async def stop_server(ctx):
     """Zatrzymuje instancję EC2 o podanym ID."""
     await ctx.send("Próbuję zatrzymać instancję")
-    try:
-        ec2_client.stop_instances(InstanceIds=[INSTANCE_ID])
-        await ctx.send("Polecenie zatrzymania dla instancji zostało wysłane.")
-        await ctx.send("Serwer jest offline 🔴")
-    except Exception as e:
-        logging.error("Błąd przy zatrzymywaniu instancji: %s", e)
-        await ctx.send(f"Wystąpił błąd: {e}")
+    if status.players.online == 0:
+        try:
+            ec2_client.stop_instances(InstanceIds=[INSTANCE_ID])
+            await ctx.send("Polecenie zatrzymania dla instancji zostało wysłane.")
+            await ctx.send("Serwer jest offline 🔴")
+        except Exception as e:
+            logging.error("Błąd przy zatrzymywaniu instancji: %s", e)
+            await ctx.send(f"Wystąpił błąd: {e}")
+    else:
+        await ctx.send("Na serwerze znajdują się gracze. Zatrzymanie serwera nie jest możliwe.")
 
 
 if __name__ == "__main__":
