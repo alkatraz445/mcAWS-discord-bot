@@ -37,6 +37,8 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+status = JavaServer.lookup(MINECRAFT_SERVER).status()
+
 
 @bot.event
 async def on_ready():
@@ -56,7 +58,6 @@ async def pong(ctx):
 @bot.command(name="status")
 async def status(ctx):
     try:
-        status = JavaServer.lookup(MINECRAFT_SERVER).status()
         if status.players.online > 2:
             await ctx.send(f"Aktualnie gra {status.players.online} osób. Ping to {status.latency:.1f} ms")
         elif status.players.online == 1:
@@ -76,8 +77,6 @@ async def start(ctx):
     """Uruchamia nową instancję EC2."""
     await ctx.send("Sprawdzam stan serwera...")
     try:
-        server = JavaServer.lookup(MINECRAFT_SERVER)
-        status = server.status()
         await ctx.send("Serwer jest już online 🟢")
         return
     except Exception as e:
@@ -96,8 +95,6 @@ async def start(ctx):
     if state == "running":
         await ctx.send("Instancja EC2 jest już uruchomiona, sprawdzam status serwera...")
         try:
-            server = JavaServer.lookup(MINECRAFT_SERVER)
-            status = server.status()
             await ctx.send("Serwer jest już online 🟢")
             return
         except Exception as e:
@@ -134,8 +131,6 @@ async def stop_server(ctx):
     """Zatrzymuje instancję EC2 o podanym ID."""
     await ctx.send("Próbuję zatrzymać instancję")
     try:
-        server = JavaServer.lookup(MINECRAFT_SERVER)
-        status = server.status()
         if status.players.online == 0:
             ec2_client.stop_instances(InstanceIds=[INSTANCE_ID])
             await ctx.send("Polecenie zatrzymania dla instancji zostało wysłane.")
